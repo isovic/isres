@@ -1,0 +1,2 @@
+gcc ismemtest.c -m64 -o ismemtest-param
+# memtime-1.3/memtime -t 0.0001 ./ismemtest
