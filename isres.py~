@@ -52,6 +52,9 @@ def convertToBytes(value, unit):
 		ret *= (1024 * 1024);
 	elif (unit=='g' or unit=='G'):
 		ret *= (1024 * 1024 * 1024);
+	else:
+		if (self.verbose >= VERBOSE_LEVEL_LOW):
+			print 'ERROR: Wrong unit parameter: "%s"!' % unit;
 	
 	return ret;
 
@@ -65,6 +68,9 @@ def convertBytesToUnit(value, unit):
 		ret /= (1024 * 1024);
 	elif (unit=='g' or unit=='G'):
 		ret /= (1024 * 1024 * 1024);
+	else:   
+		if (self.verbose >= VERBOSE_LEVEL_LOW):
+			print 'ERROR: Wrong unit parameter: "%s"!' % unit;
 	
 	return ret;
 
