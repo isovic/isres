@@ -30,4 +30,5 @@ Example usage:
 More example cases can be found in the examples/folder.
 
 
-Written by Ivan Sović.
+
+Written by Ivan Sović, 2013.
