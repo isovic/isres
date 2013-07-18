@@ -5,6 +5,7 @@ isRes is a simple Python script for measuring resource consumption on Linux plat
 It can be used as a standalone script, or imported into another Python module.
 
 isRes measures the following statistics:
+
 1. Real time - time that a process took to execute.
 2. CPU time - time that the CPU spent processing a given process. (It is equal to user time + system time)
 3. RSS (Resident Set Size) - total amount of RAM that the process occupied.
