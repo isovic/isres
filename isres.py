@@ -343,7 +343,7 @@ class myThread (threading.Thread):
 		return ret;
 
 # Runs the measurement process.
-def measure(commandLine, outputTime, outputMem, memoryUnits, verbose, samplePeriod):
+def measure(commandLine, outputTime, outputMem, outputSum, memoryUnits, verbose, samplePeriod):
 	samplePeriod = int(samplePeriod);
 	
 	threadProgram = myThread(1, 'executionThread', commandLine);
@@ -372,22 +372,32 @@ def measure(commandLine, outputTime, outputMem, memoryUnits, verbose, samplePeri
 	
 	threadProgram.parseTimeMeasurements();
 
+	summaryLine = threadProgram.summaryText(memoryUnits, ' =\t', '\n\t');
+	try:
+		fp_sum = open(outputSum, 'w');
+		fp_sum.write('Summary:\n\t%s\n' % summaryLine);
+		fp_sum.close();
+	except IOError:
+		if (threadProgram.verbose >= VERBOSE_LEVEL_LOW):
+			print 'ERROR: Summary file could not be created!';
+
 	if (threadProgram.verbose >= VERBOSE_LEVEL_LOW):
-		print 'Summary:\n\t%s' % threadProgram.summaryText(memoryUnits, ' =\t', '\n\t');
+#		print 'Summary:\n\t%s' % threadProgram.summaryText(memoryUnits, ' =\t', '\n\t');
+		print 'Summary:\n\t%s' % summaryLine;
 
 		print "isRes: Measurement completed."
 	
 	return threadProgram.summary(memoryUnits);
 	
 def main():
-	verboseLevel = VERBOSE_LEVEL_LOW;
+	verboseLevel = VERBOSE_LEVEL_NONE;
 	samplePeriod = 1;			# Memory sampling period, in seconds.
 
 	if (len(sys.argv) < 4):
 		print 'Usage:';
 		print '\t' + sys.argv[0] + ' OUTPUT_PREFIX MEMORY_UNIT COMMAND [PARAMETERS]';
 		print ' ';
-		print '\tOUTPUT_PREFIX\t- prefix for the output files. Two files will be generated: OUTPUT_PREFIX.tme and OUTPUT_PREFIX.mem .';
+		print '\tOUTPUT_PREFIX\t- prefix for the output files. Three files will be generated: OUTPUT_PREFIX.tme, OUTPUT_PREFIX.mem and OUTPUT_PREFIX.sum .';
 		print '\tMEMORY_UNIT\t- memory measurements can be output in bytes (B), kilobytes (k), megabytes (M) or gigabytes (G). This parameter should be set to one of: B, k, M, G.'
 		print '\tCOMMAND [PARAMETERS]\t- Bash command (with corresponding parameters) that will be executed and monitored.';
 		exit(1);
@@ -397,7 +407,7 @@ def main():
 		memoryUnit = '';
 		
 	commandWithParameters = ' '.join(sys.argv[3:]);
-	measure(commandWithParameters, sys.argv[1] + '.tme', sys.argv[1] + '.mem', memoryUnit, verboseLevel, samplePeriod);
+	measure(commandWithParameters, sys.argv[1] + '.tme', sys.argv[1] + '.mem', sys.argv[1] + '.sum', memoryUnit, verboseLevel, samplePeriod);
 
 if __name__ == "__main__":
    main()
